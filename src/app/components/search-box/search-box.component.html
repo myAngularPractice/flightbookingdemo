@@ -1,0 +1,229 @@
+
+<h2 class="search-heading">Flight <span class="s-eng">Search Engine</span> </h2>
+
+<form [formGroup]="searchForm" (ngSubmit)="searchFlights()">
+  <div class="radio-toolbar">
+    
+    <mat-radio-group aria-label="Select an option">
+        <mat-radio-button value="oneway" checked id="oneway"  (change)="isOneway = !isOneway">One way</mat-radio-button>
+        <mat-radio-button value="retrun"   id="retrun"  (change)="isOneway = !isOneway">Return</mat-radio-button>
+      </mat-radio-group>
+
+
+  </div>
+  <div class="">
+
+    <div class="form-row">
+
+      <div class="form-field">
+        
+      </div>
+
+<mat-form-field> 
+<!-- <input
+matInput
+formControlName="origin"
+[ngClass]="{'error': searchForm.get('origin').invalid && searchForm.get('origin').touched}"
+(focus)="clearInput('origin')"
+required
+type="text"
+class="form-control"
+placeholder="Enter Origin City">
+ -->
+
+ <input type="text" placeholder="Enter Origin City" (focus)="clearInput('origin')" aria-label="Number" matInput formControlName="origin"[matAutocomplete]="auto" required>
+ <mat-autocomplete #auto="matAutocomplete">
+   <mat-option  *ngFor="let city of originCities" [value]="city" (click)= "onSelectAutoSuggestedCity(city, 'origin')">
+     {{city}}
+   </mat-option>
+ </mat-autocomplete>
+
+
+
+<mat-error
+*ngIf="searchForm.get('origin').invalid && searchForm.get('origin').touched"
+class="invalid-feedback">
+Required
+</mat-error>
+</mat-form-field>
+
+
+<!--      
+      <div class="filter-select" *ngIf="originCities?.length">
+        <ul class="filter-select-ul">
+          <li
+            (click)= "onSelectAutoSuggestedCity(city, 'origin')"
+            *ngFor="let city of originCities" class="filter-select-list">
+            {{city}}
+          </li>
+        </ul>
+      </div> -->
+
+    </div>
+
+
+
+
+
+    <div class="form-row">
+      <div class="form-field">
+        
+
+
+          <mat-form-field> 
+              <!-- <input matInput
+          formControlName="destination"
+          [ngClass]="{'error': searchForm.get('destination').invalid && searchForm.get('destination').touched}"
+          (focus)="clearInput('destination')"
+          type="text"
+          class="form-control"
+          placeholder="Enter Destination City"> -->
+
+
+
+
+          <input type="text" placeholder="Enter Destination City" (focus)="clearInput('destination')" aria-label="Number" matInput  formControlName="destination" [matAutocomplete]="auto2" required>
+          <mat-autocomplete #auto2="matAutocomplete">
+            <mat-option  *ngFor="let city of destinationCities" [value]="city"  (click)= "onSelectAutoSuggestedCity(city, 'destination')">
+              {{city}}
+            </mat-option>
+          </mat-autocomplete>
+
+
+          <mat-error
+          *ngIf="searchForm.get('destination').invalid && searchForm.get('destination').touched"
+         class="invalid-feedback">
+         Required
+       </mat-error>
+            </mat-form-field>
+
+
+
+      </div>
+     
+      <!-- <div class="filter-select" *ngIf="destinationCities?.length">
+        <ul class="filter-select-ul">
+          <li
+            (click)= "onSelectAutoSuggestedCity(city, 'destination')"
+            *ngFor="let city of destinationCities" class="filter-select-list">
+            {{city}}
+          </li>
+        </ul>
+      </div> -->
+    </div>
+
+    <div class="form-row" title="Departure date">
+      <div class="form-field">
+       
+
+        <!-- <input
+          formControlName="departureDate"
+          type="date"
+          [ngClass]="{'error': searchForm.get('departureDate').invalid && searchForm.get('departureDate').touched}"
+          class="form-control"
+          min="{{currentDate}}"
+          placeholder="Departure date">   -->
+
+       <mat-form-field> 
+              <input matInput
+              formControlName="departureDate"
+              [matDatepicker]="picker" 
+              [ngClass]="{'error': searchForm.get('departureDate').invalid && searchForm.get('departureDate').touched}"
+              class="form-control"
+              min="{{currentDate}}"
+              placeholder="Departure date">
+              <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+              <mat-datepicker #picker></mat-datepicker>
+              <mat-error
+              *ngIf="searchForm.get('departureDate').invalid && searchForm.get('departureDate').touched"
+              class="invalid-feedback">
+                Required
+            </mat-error>
+            </mat-form-field> 
+
+
+
+
+      </div>
+   
+    </div>
+
+    <div class="form-row" title="Return date"  *ngIf="!isOneway">
+      <div class="form-field">
+     
+        <!-- <input
+        formControlName="returnDate"
+        [ngClass]="{'error': searchForm.get('returnDate').invalid && searchForm.get('returnDate').touched}"
+        type="date"
+        class="form-control error"
+        min="{{currentDate}}"
+        placeholder="Return date"> -->
+
+        <mat-form-field>  
+              <input matInput  [matDatepicker]="picker" placeholder="Choose a date"
+              formControlName="returnDate"
+              [ngClass]="{'error': searchForm.get('returnDate').invalid && searchForm.get('returnDate').touched}"
+              class="form-control error"
+              min="{{currentDate}}"
+              placeholder="Return date">
+               <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+              <mat-datepicker #picker></mat-datepicker>
+              <mat-error
+              *ngIf="searchForm.get('returnDate').invalid && searchForm.get('returnDate').touched"
+              class="invalid-feedback">
+                Required
+            </mat-error>
+            </mat-form-field> 
+
+
+
+      </div>
+  
+    </div>
+
+    <div class="form-row">
+      <div class="form-field">
+
+          <mat-form-field>
+              <mat-label>Passengers</mat-label>
+              <mat-select #fontSize value="1" formControlName="passengers" [ngClass]="{'error': searchForm.get('passengers').invalid && searchForm.get('passengers').touched}"  >
+                <mat-option value="1">1</mat-option>
+                <mat-option value="2">2</mat-option>
+                <mat-option value="3">3</mat-option>
+                <mat-option value="4">4</mat-option>
+                <mat-option value="5">5</mat-option>
+                <mat-option value="6">6</mat-option>
+              </mat-select>
+              <mat-error
+              *ngIf="searchForm.get('passengers').invalid && searchForm.get('passengers').touched"
+              class="invalid-feedback">
+                Required
+            </mat-error>
+            </mat-form-field>
+ 
+      </div>
+  
+    </div>
+
+    <div class="form-field "> 
+        <button  type="submit" class="searchBtn" mat-raised-button color="primary">Search</button>
+
+    </div>
+  </div>
+  <div class="slidecontainer">
+    <div class="sliderBlk">
+      <h3>Refine flight search</h3>
+      <div>{{ this.searchForm.get('price').value }}</div>
+    </div> 
+
+
+
+      <mat-slider  formControlName="price" id="myRange"  min="1000"
+      max="40000"
+      step="100"></mat-slider>
+
+
+
+  </div>
+
+</form>
